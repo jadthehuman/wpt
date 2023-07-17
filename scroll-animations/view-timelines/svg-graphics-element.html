@@ -12,15 +12,19 @@
   }
 
   #line {
-    animation: stroke steps(2, jump-none) both;
+    animation: stroke auto linear both;
     animation-timeline: view();
-    animation-range: exit-crossing entry-crossing;
+    animation-range: exit-crossing;
+  }
+  .spacer {
+    height:  100vh;
   }
 </style>
 <body>
 <svg width="100" height="3000" stroke="red" stroke-width="5">
   <path id="line" d="M 50 0 V 3000"></path>
 </svg>
+<div class="spacer"></div>
 </body>
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
@@ -32,9 +36,10 @@
     const anim = target.getAnimations()[0];
     await anim.ready;
     assert_equals(getComputedStyle(target).stroke, 'rgb(0, 0, 255)');
-    scroller.scrollTop = 2000;
+    scroller.scrollTop =
+        0.5*(scroller.scrollHeight - scroller.clientHeight);
     await waitForNextFrame();
-    assert_equals(getComputedStyle(target).stroke, 'rgb(0, 128, 0)');
+    assert_equals(getComputedStyle(target).stroke, 'rgb(0, 64, 128)');
   }, 'View timeline attached to SVG graphics element');
 </script>
 </html>
