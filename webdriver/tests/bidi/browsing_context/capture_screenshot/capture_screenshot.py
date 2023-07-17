@@ -45,9 +45,11 @@ async def test_capture(bidi_session, top_context, inline, compare_png_bidi,
     await bidi_session.browsing_context.navigate(
         context=top_context["context"], url=inline("<div>foo</div>"), wait="complete"
     )
+
     if activate:
         await bidi_session.browsing_context.activate(
             context=top_context["context"])
+
     new_data = await bidi_session.browsing_context.capture_screenshot(
         context=top_context["context"])
 
