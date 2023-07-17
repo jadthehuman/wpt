@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<link rel=author href="mailto:jarhar@chromium.org">
+<link rel=help href="https://github.com/w3c/csswg-drafts/issues/8857">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<script src="/css/support/parsing-testcommon.js"></script>
+<script src="/css/support/computed-testcommon.js"></script>
+<div id="target"></div>
+<script>
+test_valid_value('transition-animation-type', 'normal');
+test_computed_value('transition-animation-type', 'normal');
+
+test_valid_value('transition-animation-type', 'discrete');
+test_computed_value('transition-animation-type', 'discrete');
+
+test_valid_value('transition', 'discrete display', 'discrete display 0s ease 0s');
+test_computed_value('transition', 'discrete display', 'discrete display 0s ease 0s');
+
+test_valid_value('transition', 'discrete display 3s', 'discrete display 3s ease 0s');
+test_computed_value('transition', 'discrete display 3s', 'discrete display 3s ease 0s');
+
+test_valid_value('transition', 'discrete display 3s 1s', 'discrete display 3s ease 1s');
+test_computed_value('transition', 'discrete display 3s 1s', 'discrete display 3s ease 1s');
+
+test_valid_value('transition', 'discrete display 3s ease-in-out', 'discrete display 3s ease-in-out 0s');
+test_computed_value('transition', 'discrete display 3s ease-in-out', 'discrete display 3s ease-in-out 0s');
+
+test_valid_value('transition', 'discrete display 3s ease-in-out 1s', 'discrete display 3s ease-in-out 1s');
+test_computed_value('transition', 'discrete display 3s ease-in-out 1s', 'discrete display 3s ease-in-out 1s');
+</script>
