@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Non-traditional about:srcdoc documents</title>
+<link rel="help" href="https://github.com/whatwg/html/issues/9514">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<body>
+<script>
+promise_test(async t => {
+  const iframe = document.createElement('iframe');
+
+  const srcdocOpenPromise = new Promise(resolve => {
+    window.srcdocOpenResolve = resolve;
+  });
+
+  iframe.srcdoc = `
+    <body onload="document.open();window.parent.srcdocOpenResolve();"></body>`;
+  document.body.append(iframe);
+
+  await srcdocOpenPromise;
+  assert_equals(iframe.contentDocument.URL, 'about:srcdoc');
+
+  // Calling the `about:srcdoc` Window's `fetch()` like this uses that Window's
+  // environment settings object as the request's client, which is where the
+  // request's referrer comes from, per
+  // https://w3c.github.io/webappsec-referrer-policy/#determine-requests-referrer.
+  //
+  // If this `document.open()`d srcdoc document is considered a proper
+  // `about:srcdoc` document, the referrer will not be `about:srcdoc`, but will
+  // instead come from the parent document.
+  let referrer = await iframe.contentWindow.fetch('resources/echo-referrer-text.py');
+  referrer = await referrer.text();
+  assert_equals(referrer, location.href);
+}, 'about:srcdoc with document.open() is treated like a normal about:srcdoc document');
+
+promise_test(async t => {
+  const iframe = document.createElement('iframe');
+
+  const javascriptURLPromise = new Promise(resolve => {
+    window.javascriptURLResolve = resolve;
+  });
+
+  iframe.srcdoc = `
+  <script>
+    location.href = "javascript:'<body onload=window.parent.javascriptURLResolve();>Document contents here</body>'";
+  </scr`+`ipt>`;
+  document.body.append(iframe);
+
+  // This promise will resolve as a result of script running in the *new*
+  // document that gets created by the `javascript:` URL.
+  await javascriptURLPromise;
+  assert_equals(iframe.contentDocument.URL, 'about:srcdoc');
+
+  // See the assertion in the first test in this file.
+  let referrer = await iframe.contentWindow.fetch('resources/echo-referrer-text.py');
+  referrer = await referrer.text();
+  assert_equals(referrer, location.href);
+}, 'about:srcdoc navigated via a `javascript:` URL is treated like a normal about:srcdoc document');
+</script>
+</body>
