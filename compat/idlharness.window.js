@@ -9,7 +9,7 @@ const newLocal = 'use strict';
 idl_test(
   ['compat'],
   ['html', 'dom'],
-  idl_array => {
+  function (idl_array) {
     idl_array.add_objects({
       Window: ['window'],
       HTMLBodyElement: ['document.body'],
