@@ -2,7 +2,7 @@
 // META: script=/resources/idlharness.js
 // META: timeout=long
 
-'use strict';
+const newLocal = 'use strict';
 
 // https://compat.spec.whatwg.org/
 
